@@ -306,7 +306,7 @@ async function processSinglePage(page) {
     
     for (let i = 0; i < movieIds.length; i++) {
         const movieId = movieIds[i];
-        const movieUrl = `https://missav.ws/en/${movieId}`;
+        const movieUrl = `https://missav.ws/en/actresses/${movieId}`;
         const htmlFilePath = path.join(pageFolder, `${movieId}.html`);
         
         // Check if file already exists
@@ -324,9 +324,9 @@ async function processSinglePage(page) {
             
             // Try multiple URL patterns for the movie page
             const urlsToTry = [
-                `https://missav.ws/en/${movieId}`,
-                `https://missav.com/en/${movieId}`,
-                `https://missav.ai/en/${movieId}`
+                `https://missav.ws/en/actresses/${movieId}`,
+                `https://missav.live/en/actresses/${movieId}`,
+                `https://missav.ai/en/actresses/${movieId}`
             ];
             
             let htmlContent = null;
