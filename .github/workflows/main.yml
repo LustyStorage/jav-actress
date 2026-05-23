@@ -1,0 +1,47 @@
+name: MissAV.Ai
+
+on:
+  workflow_dispatch: # Allows you to start it manually
+  schedule:
+    - cron: '0 */12 * * *' # Automatically Runs every 12 hours
+
+permissions:
+  contents: write # Required for pushing the automated commits
+
+jobs:
+  scrape_and_update:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Start FlareSolverr (Cloudflare Bypass)
+        run: |
+          docker run -d \
+            --name=flaresolverr \
+            -p 8191:8191 \
+            -e LOG_LEVEL=info \
+            --restart always \
+            ghcr.io/flaresolverr/flaresolverr:latest
+          # Wait for FlareSolverr to be ready
+          sleep 30
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22 # Unified to use Node 22 for both scripts
+
+      - name: Install Dependencies
+        run: npm install express axios cheerio fs-extra
+
+      - name: Run Scraper
+        run: node index.js
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Auto-update: Scraper and fetched posts" || echo "no changes"
+          git push
