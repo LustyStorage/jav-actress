@@ -351,7 +351,7 @@ async function processSinglePage(page) {
                     if (response.data && response.data.length > 1000) {
                         htmlContent = response.data;
                         successfulUrl = tryUrl;
-                        console.log(`    ✅ Got content from ${tryUrl}`);
+                        // console.log(`    ✅ Got content from ${tryUrl}`);
                         break;
                     }
                 } catch (e) {
@@ -364,7 +364,8 @@ async function processSinglePage(page) {
             }
             
             await fs.writeFile(htmlFilePath, htmlContent, 'utf-8');
-            console.log(`  ✅ Saved: ${movieId}.html (${(htmlContent.length / 1024).toFixed(1)} KB)`);
+            console.log(`  ✅ [${i + 1}/${movieIds.length}] ${movieId}.html (${(htmlContent.length / 1024).toFixed(1)} KB)`);
+            // console.log(`  ✅ Saved: ${movieId}.html (${(htmlContent.length / 1024).toFixed(1)} KB)`);
             successCount++;
             
             // await sleep(1000); // Be respectful
@@ -541,7 +542,7 @@ app.listen(PORT, async () => {
     console.log(`\n⏳ Starting automatic download...`);
     
     // Start downloading
-    await processAllPages(1, 5);
+    await processAllPages(1, 10);
     
     // After scraping is complete, wait a moment and then exit
     console.log('\n🛑 Scraping complete. Shutting down in 2 seconds...');
