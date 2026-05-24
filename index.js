@@ -541,7 +541,7 @@ app.listen(PORT, async () => {
     console.log(`\n⏳ Starting automatic download...`);
     
     // Start downloading
-    await processAllPages(1, 1);
+    await processAllPages(1, 5);
     
     // After scraping is complete, wait a moment and then exit
     console.log('\n🛑 Scraping complete. Shutting down in 2 seconds...');
