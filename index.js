@@ -327,7 +327,7 @@ async function processSinglePage(page) {
         }
         
         try {
-            console.log(`  📥 [${i + 1}/${movieIds.length}] Fetching ${movieId}...`);
+            // console.log(`  📥 [${i + 1}/${movieIds.length}] Fetching ${movieId}...`);
             
             // Try multiple URL patterns for the movie page
             const urlsToTry = [
