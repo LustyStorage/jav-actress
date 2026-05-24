@@ -14,6 +14,9 @@ const ROOT_DIR = __dirname;
 const FLARESOLVERR_URL = 'http://localhost:8191/v1';
 let USE_FLARESOLVERR = true;
 
+// Flag to track scraping completion
+let isScrapingComplete = false;
+
 // Global error log array
 let globalErrorLog = [];
 let globalSummary = {
@@ -151,7 +154,7 @@ async function findWorkingSitemapUrl(page) {
     const possibleUrls = [
         `https://missav.ws/sitemap_actresses_${page}.xml`,
         `https://missav.live/sitemap_actresses_${page}.xml`,
-        `https://missav.ai/sitemap_actresses_${page}.xml`
+        `https://missav.ai/sitemap_actresses_${page}.xml`,
     ];
     
     for (const url of possibleUrls) {
@@ -255,6 +258,10 @@ async function processAllPages(startPage = 1, endPage = 100) {
     console.log(`  Duration: ${globalSummary.duration_seconds.toFixed(1)} seconds`);
     
     await checkDownloadStatus();
+    
+    // Mark scraping as complete
+    isScrapingComplete = true;
+    console.log('\n🎉 Scraping completed successfully!');
 }
 
 // Process a single page
@@ -325,7 +332,7 @@ async function processSinglePage(page) {
             // Try multiple URL patterns for the movie page
             const urlsToTry = [
                 `https://missav.ws/en/actresses/${movieId}`,
-                `https://missav.live/en/actresses/${movieId}`,
+                `https://missav.com/en/actresses/${movieId}`,
                 `https://missav.ai/en/actresses/${movieId}`
             ];
             
@@ -386,7 +393,7 @@ async function processSinglePage(page) {
         movie_ids: movieIds.slice(0, 10) // Only save first 10 to keep file small
     };
     
-    await fs.writeJson(path.join(pageFolder, '_summary.json'), pageSummary, { spaces: 2 });
+    // await fs.writeJson(path.join(pageFolder, '_summary.json'), pageSummary, { spaces: 2 });
     
     return { totalMovies: movieIds.length, successful: successCount, failed: failCount };
 }
@@ -426,6 +433,21 @@ async function checkDownloadStatus() {
     console.log(`TOTAL: ${totalHtml} HTML files, ${totalErrors} errors`);
 }
 
+// API endpoint to get scraping status
+app.get('/scraping-status', (req, res) => {
+    res.json({ 
+        isScrapingComplete,
+        summary: {
+            processedPages: globalSummary.processedPages,
+            totalPages: globalSummary.totalPages,
+            totalMoviesFound: globalSummary.totalMoviesFound,
+            totalSuccessfulDownloads: globalSummary.totalSuccessfulDownloads,
+            totalFailedDownloads: globalSummary.totalFailedDownloads,
+            duration_seconds: globalSummary.duration_seconds
+        }
+    });
+});
+
 // API endpoint to get global error log
 app.get('/error-log', async (req, res) => {
     try {
@@ -456,12 +478,23 @@ app.get('/summary', async (req, res) => {
     }
 });
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+// API endpoint to get download status
+app.get('/download-status', async (req, res) => {
+    await checkDownloadStatus();
+    res.json({ message: 'Check console for status' });
+});
 
-// ============ EXPRESS ENDPOINTS ============
+// API endpoint to serve pages
+app.get('/pages/:page/:filename', async (req, res) => {
+    const filePath = path.join(__dirname, 'pages', req.params.page, req.params.filename);
+    if (await fs.pathExists(filePath)) {
+        res.sendFile(path.resolve(filePath));
+    } else {
+        res.status(404).send('File not found');
+    }
+});
 
+// Discover movies endpoint
 app.get('/discover/movie', async (req, res) => {
     try {
         const page = req.query.page || 1;
@@ -487,19 +520,9 @@ app.get('/discover/movie', async (req, res) => {
     }
 });
 
-app.get('/download-status', async (req, res) => {
-    await checkDownloadStatus();
-    res.json({ message: 'Check console for status' });
-});
-
-app.get('/pages/:page/:filename', async (req, res) => {
-    const filePath = path.join(__dirname, 'pages', req.params.page, req.params.filename);
-    if (await fs.pathExists(filePath)) {
-        res.sendFile(path.resolve(filePath));
-    } else {
-        res.status(404).send('File not found');
-    }
-});
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 // Start server
 app.listen(PORT, async () => {
@@ -515,12 +538,17 @@ app.listen(PORT, async () => {
         USE_FLARESOLVERR = false;
     }
     
-    console.log(`\n⏳ Starting automatic download in 0 seconds...`);
-    // await sleep(3000);
+    console.log(`\n⏳ Starting automatic download...`);
     
     // Start downloading
     await processAllPages(1, 1);
+    
+    // After scraping is complete, wait a moment and then exit
+    console.log('\n🛑 Scraping complete. Shutting down in 2 seconds...');
+    
+    // Give time for any final writes to complete
+    setTimeout(() => {
+        console.log('👋 Exiting process...');
+        process.exit(0);
+    }, 2000);
 });
-
-
-
