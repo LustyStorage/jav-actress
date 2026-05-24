@@ -519,5 +519,8 @@ app.listen(PORT, async () => {
     // await sleep(3000);
     
     // Start downloading
-    await processAllPages(1, 10);
+    await processAllPages(1, 1);
 });
+
+
+
