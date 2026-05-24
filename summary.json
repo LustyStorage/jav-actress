@@ -1,52 +1,52 @@
 {
-  "startTime": "2026-05-24T06:12:28.281Z",
-  "endTime": "2026-05-24T06:28:29.978Z",
+  "startTime": "2026-05-24T07:16:22.336Z",
+  "endTime": "2026-05-24T07:46:18.768Z",
   "totalPages": 5,
   "processedPages": 5,
-  "totalMoviesFound": 5000,
-  "totalSuccessfulDownloads": 5000,
+  "totalMoviesFound": 4995,
+  "totalSuccessfulDownloads": 4995,
   "totalFailedDownloads": 0,
   "pages": [
     {
-      "page": 1,
+      "page": 6,
       "total_movies": 1000,
       "successful": 1000,
       "failed": 0,
-      "duration_seconds": 1.072,
-      "timestamp": "2026-05-24T06:12:29.353Z"
+      "duration_seconds": 357.531,
+      "timestamp": "2026-05-24T07:22:19.868Z"
     },
     {
-      "page": 2,
-      "total_movies": 1000,
-      "successful": 1000,
+      "page": 7,
+      "total_movies": 999,
+      "successful": 999,
       "failed": 0,
-      "duration_seconds": 246.162,
-      "timestamp": "2026-05-24T06:16:35.517Z"
+      "duration_seconds": 358.433,
+      "timestamp": "2026-05-24T07:28:18.302Z"
     },
     {
-      "page": 3,
-      "total_movies": 1000,
-      "successful": 1000,
+      "page": 8,
+      "total_movies": 999,
+      "successful": 999,
       "failed": 0,
-      "duration_seconds": 237.283,
-      "timestamp": "2026-05-24T06:20:32.800Z"
+      "duration_seconds": 364.035,
+      "timestamp": "2026-05-24T07:34:22.337Z"
     },
     {
-      "page": 4,
-      "total_movies": 1000,
-      "successful": 1000,
+      "page": 9,
+      "total_movies": 999,
+      "successful": 999,
       "failed": 0,
-      "duration_seconds": 234.529,
-      "timestamp": "2026-05-24T06:24:27.329Z"
+      "duration_seconds": 362.905,
+      "timestamp": "2026-05-24T07:40:25.242Z"
     },
     {
-      "page": 5,
-      "total_movies": 1000,
-      "successful": 1000,
+      "page": 10,
+      "total_movies": 998,
+      "successful": 998,
       "failed": 0,
-      "duration_seconds": 242.648,
-      "timestamp": "2026-05-24T06:28:29.977Z"
+      "duration_seconds": 353.525,
+      "timestamp": "2026-05-24T07:46:18.767Z"
     }
   ],
-  "duration_seconds": 961.697
+  "duration_seconds": 1796.432
 }
